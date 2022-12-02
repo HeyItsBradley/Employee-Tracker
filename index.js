@@ -24,12 +24,15 @@ function makeAscii() {
   art.font("Employee Tracker", "/doom", (err, rendered) => {
     if (err) {
       console.log(err);
-    } else console.log(rendered);
+    } else {
+      console.log(rendered);
+      inquirer.prompt(menuSelect);
+    }
   }); //returns String
 }
 function init() {
   makeAscii();
-  //   inquirer.prompt(menuSelect);
+  inquirer.prompt(menuSelect);
 }
 
 init();
