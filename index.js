@@ -36,20 +36,21 @@ const menuSelect = [
 
 function showEmployees() {
   db.query("SELECT * FROM EMPLOYEE", (err, results) => {
-    if (err) {
-      console.error(err);
-    } else {
-      let createdTable = results;
-      console.table(createdTable);
-      showMenu();
-    }
+    console.table(results);
+    showMenu();
   });
 }
 
 function showRoles() {
   db.query("SELECT * FROM role", (err, results) => {
-    let createdTable = results;
-    console.table(createdTable);
+    console.table(results);
+    showMenu();
+  });
+}
+
+function showDepartments() {
+  db.query("SELECT * FROM department", (err, results) => {
+    console.table(results);
     showMenu();
   });
 }
@@ -62,6 +63,9 @@ function showMenu() {
     }
     if (Response.choice === "View All Roles") {
       showRoles();
+    }
+    if (Response.choice === "View All Departments") {
+      showDepartments();
     }
   });
 }
