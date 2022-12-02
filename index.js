@@ -1,4 +1,7 @@
 const inquirer = require("inquirer");
+const Font = require("ascii-art-font");
+const art = require("ascii-art");
+Font.fontPath = "Fonts";
 
 const menuSelect = [
   {
@@ -16,8 +19,17 @@ const menuSelect = [
     name: "choice",
   },
 ];
+
+function makeAscii() {
+  art.font("Employee Tracker", "/doom", (err, rendered) => {
+    if (err) {
+      console.log(err);
+    } else console.log(rendered);
+  }); //returns String
+}
 function init() {
-  inquirer.prompt(menuSelect);
+  makeAscii();
+  //   inquirer.prompt(menuSelect);
 }
 
 init();
