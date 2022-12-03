@@ -42,10 +42,13 @@ function showEmployees() {
 }
 
 function showRoles() {
-  db.query("SELECT * FROM role", (err, results) => {
-    console.table(results);
-    showMenu();
-  });
+  db.query(
+    "SELECT role.id, role.title, department.name AS department, role.salary FROM role JOIN department ON role.department_id = department.id",
+    (err, results) => {
+      console.table(results);
+      showMenu();
+    }
+  );
 }
 
 function showDepartments() {
