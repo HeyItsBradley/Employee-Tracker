@@ -16,7 +16,7 @@ const db = mysql.createConnection(
   console.log(`Connected to the employee_db database.`)
 );
 
-//menu
+//menu options
 const menuSelect = [
   {
     type: "list",
@@ -31,6 +31,14 @@ const menuSelect = [
       "update an employee role",
     ],
     name: "choice",
+  },
+];
+
+const addingDepartmentQuestions = [
+  {
+    type: "input",
+    message: "What will be the name of the department?",
+    name: "departmentName",
   },
 ];
 //makes a query and returns back employee table
@@ -61,7 +69,22 @@ function showDepartments() {
   });
 }
 //adds a department
-function addDepartment() {}
+function addDepartment() {
+  inquirer.prompt(addingDepartmentQuestions).then((Response) => {
+    db.query(
+      "INSERT INTO department (name) VALUES (?)",
+      Response.departmentName,
+      (err, results) => {
+        if (err) {
+          console.log(err);
+        } else {
+          console.log("Department Added !");
+          menuSelect();
+        }
+      }
+    );
+  });
+}
 //adds a role
 function addRole() {}
 //adds an employee
