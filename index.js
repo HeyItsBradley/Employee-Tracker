@@ -16,6 +16,8 @@ const db = mysql.createConnection(
   console.log(`Connected to the employee_db database.`)
 );
 
+// let currentDepartments = ["test"];
+
 //menu options
 const menuSelect = [
   {
@@ -41,6 +43,7 @@ const addingDepartmentQuestions = [
     name: "departmentName",
   },
 ];
+
 //makes a query and returns back employee table
 function showEmployees() {
   db.query(
@@ -79,14 +82,61 @@ function addDepartment() {
           console.log(err);
         } else {
           console.log("Department Added !");
-          menuSelect();
+
+          showMenu();
         }
       }
     );
   });
 }
 //adds a role
-function addRole() {}
+function addRole() {
+  currentDepartments = [];
+  db.query("SELECT * FROM department", (err, results) => {
+    console.log(results);
+    for (i = 0; i < results.length; i++) {
+      currentDepartments.push(results[i].name);
+    }
+    const addingRoleQuestions = [
+      {
+        type: "input",
+        message: "What will be the name of the role?",
+        name: "name",
+      },
+      {
+        type: "input",
+        message: "What will be the salary?",
+        name: "salary",
+      },
+      {
+        type: "list",
+        message: "What department is the role in?",
+        choices: currentDepartments,
+        name: "departmentSelection",
+      },
+    ];
+    inquirer.prompt(addingRoleQuestions).then((Response) => {
+      let department_id = 0;
+      for (i = 0; i < results.length; i++) {
+        if (Response.departmentSelection == results[i].name) {
+          department_id = results[i].id;
+        }
+      }
+
+      db.query(
+        `INSERT INTO role (title, salary, department_id) VALUES 
+        ("${Response.name}", ${Response.salary}, ${department_id});`,
+        (err, results) => {
+          if (err) {
+            console.log(err);
+          } else {
+            console.log("Role Added!");
+          }
+        }
+      );
+    });
+  });
+}
 //adds an employee
 function addEmployee() {}
 //updates an employees role
@@ -124,6 +174,7 @@ function makeAscii() {
       console.log(err);
     } else {
       console.log(rendered);
+      // updateDepartments();
       showMenu();
     }
   }); //returns String
