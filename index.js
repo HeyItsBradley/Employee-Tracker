@@ -139,7 +139,6 @@ function addRole() {
 function addEmployee() {
   currentRoles = [];
   db.query("SELECT * FROM role", (err, results) => {
-    console.log(results);
     for (i = 0; i < results.length; i++) {
       currentRoles.push(results[i].title);
     }

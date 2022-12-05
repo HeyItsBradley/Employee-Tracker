@@ -23,6 +23,7 @@ npm i
 ## Usage
 
 To use, run node index.js and follow the prompts on screen.
+https://drive.google.com/file/d/1jvFFBKAzwU39Mbfd6CIcP-kKAIoFgFRH/view
 
 ![altText](./Assets/sample.PNG)
 
