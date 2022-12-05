@@ -154,6 +154,12 @@ function addEmployee() {
         message: "What is the Employees last name?",
         name: "LastName",
       },
+      {
+        type: "list",
+        message: "What is the Employees role",
+        choices: currentRoles,
+        name: "roleSelection",
+      },
 
       {
         type: "input",
@@ -193,38 +199,65 @@ function addEmployee() {
 }
 //updates an employees role
 function updateEmployee() {
-  roleList = [];
-  db.query("SELECT * FROM role", (err, results) => {
-    for (i = 0; i < results.length; i++) {
-      roleList.push(results[i].name);
-    }
-  });
-  employeeList = [];
+  let roleList = [];
+
+  let employeeList = [];
+  var thisEmployee = "";
+  var thisRole = "";
+
   db.query("SELECT * FROM employee", (err, results) => {
     for (i = 0; i < results.length; i++) {
       employeeList.push(results[i].first_name);
     }
+    const selectEmployee = [
+      {
+        type: "list",
+        message: "Which Employees role would you like to change",
+        choices: employeeList,
+        name: "employee",
+      },
+    ];
+    inquirer.prompt(selectEmployee).then((Response) => {
+      for (i = 0; i < results.length; i++) {
+        if (Response.employee === results[i].first_name) {
+          thisEmployee = results[i].id;
+          console.log(thisEmployee);
+        }
+      }
+      db.query("Select * FROM role", (err, data) => {
+        for (i = 0; i < data.length; i++) {
+          roleList.push(data[i].title);
+        }
+        const selectRole = [
+          {
+            type: "list",
+            message: "What is their new role?",
+            choices: roleList,
+            name: "role",
+          },
+        ];
+        inquirer.prompt(selectRole).then((Response) => {
+          for (i = 0; i < data.length; i++) {
+            if (Response.role === data[i].title) {
+              thisRole = data[i].id;
+              console.log(`emp is ${thisEmployee}, role is ${thisRole}`);
+              db.query(
+                `UPDATE employee SET role_id = ${thisRole} WHERE id = ${thisEmployee}`,
+                (err, results) => {
+                  if (err) {
+                    console.log(err);
+                  } else {
+                    console.log("role updated!");
+                    showMenu();
+                  }
+                }
+              );
+            }
+          }
+        });
+      });
+    });
   });
-
-  const updateEmployeeQuestions = [
-    {
-      type: "list",
-      message: "Whos role will be updated?",
-      choices: employeeList,
-      name: "selectedEmployee",
-    },
-    {
-      type: "list",
-      message: "What will their new role be?",
-      choices: roleList,
-      name: "newRole",
-    },
-  ];
-  inquirer.promt(updateEmployeeQuestions).then((Response) => {
-    console.log(Response);
-  });
-
-  // db.query(`UPDATE employee SET role_id = ? WHERE id = ?`);
 }
 //will display the menu
 function showMenu() {
@@ -247,7 +280,7 @@ function showMenu() {
     if (Response.choice === "add an employee") {
       addEmployee();
     }
-    if (Response.choice === "update an employee") {
+    if (Response.choice === "update an employee role") {
       updateEmployee();
     }
   });
